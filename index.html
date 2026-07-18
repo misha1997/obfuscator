@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Bypass • Обфускатор</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --pink: #ff0066;
+      --purple: #8b00ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a, #1a0033);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 40px auto;
+      background: rgba(20, 20, 30, 0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(255, 0, 102, 0.25);
+      border: 1px solid rgba(255, 0, 102, 0.3);
+    }
+
+    header {
+      background: linear-gradient(to right, var(--pink), var(--purple));
+      padding: 35px 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .main {
+      padding: 40px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      background: #111118;
+      border: 2px solid #333;
+      border-radius: 16px;
+      padding: 20px;
+      color: #fff;
+      font-size: 17px;
+      resize: vertical;
+      transition: all 0.3s;
+    }
+
+    textarea:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 4px rgba(255, 0, 102, 0.25);
+      outline: none;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin: 30px 0;
+      align-items: center;
+    }
+
+    .mode-select {
+      display: flex;
+      background: #1a1a24;
+      border-radius: 50px;
+      padding: 6px;
+    }
+
+    .mode-btn {
+      padding: 12px 26px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .mode-btn.active {
+      background: var(--pink);
+      color: white;
+      box-shadow: 0 5px 15px rgba(255, 0, 102, 0.4);
+    }
+
+    /* Стилизованный ползунок */
+    .slider-container {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .slider-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      background: #222;
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 24px;
+      width: 24px;
+      background: white;
+      border: 3px solid var(--pink);
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(255, 0, 102, 0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      height: 24px;
+      width: 24px;
+      background: white;
+      border: 3px solid var(--pink);
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(255, 0, 102, 0.5);
+      cursor: pointer;
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 0, 102, 0.6);
+    }
+
+    .result-box {
+      background: #0f0f14;
+      border-radius: 16px;
+      padding: 25px;
+      min-height: 130px;
+      font-size: 18px;
+      line-height: 1.6;
+      border: 1px solid #222;
+      margin-top: 10px;
+      word-break: break-all;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 15px 32px;
+      font-size: 16.5px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--pink), #ff3399);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #222;
+      color: #ddd;
+    }
+
+    button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .status {
+      margin-top: 12px;
+      min-height: 28px;
+      font-weight: 500;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 25px;
+      opacity: 0.6;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-shield-alt"></i> TikTok Bypass</h1>
+      <p>Мощный обфускатор для прохождения модерации</p>
+    </header>
+
+    <div class="main">
+      <textarea id="input" placeholder="Вставьте текст сюда..."></textarea>
+
+      <div class="controls">
+        <div>
+          <div class="mode-select" id="modeSelect">
+            <div class="mode-btn active" data-mode="tiktok">TikTok Safe</div>
+            <div class="mode-btn" data-mode="strange">Странный</div>
+            <div class="mode-btn" data-mode="max">Максимальный</div>
+          </div>
+        </div>
+
+        <div class="slider-container">
+          <label>Интенсивность обфускации: <span id="intensityValue">75</span>%</label>
+          <input type="range" id="intensity" min="40" max="95" value="75">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-primary" onclick="bypassTikTok()">
+          <i class="fas fa-magic"></i> Преобразовать
+        </button>
+        <button class="btn-secondary" onclick="copyResult()">
+          <i class="fas fa-copy"></i> Скопировать
+        </button>
+        <button class="btn-secondary" onclick="clearAll()">
+          <i class="fas fa-trash"></i> Очистить
+        </button>
+      </div>
+
+      <h3 style="margin: 25px 0 10px;">Результат:</h3>
+      <div class="result-box" id="result">Здесь появится преобразованный текст...</div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="footer">
+      Homoglyphs + Zero-Width + Diacritics • 2026
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 'tiktok';
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+      });
+    });
+
+    const intensitySlider = document.getElementById('intensity');
+    const intensityValue = document.getElementById('intensityValue');
+
+    intensitySlider.addEventListener('input', () => {
+      intensityValue.textContent = intensitySlider.value;
+    });
+
+    const zwsp = '\u200B';
+    const diacritics = ['\u0301','\u0302','\u0303','\u0304','\u0306','\u0307','\u0308'];
+
+    function addDiacritic(char) {
+      return char + diacritics[Math.floor(Math.random() * diacritics.length)];
+    }
+
+    function bypassTikTok() {
+      let text = document.getElementById('input').value.trim();
+      if (!text) {
+        document.getElementById('status').innerHTML = '<span style="color:#ffaa00;">Введите текст!</span>';
+        return;
+      }
+
+      const intensity = parseInt(intensitySlider.value) / 100;
+      let result = '';
+
+      for (let char of text) {
+        if (Math.random() > intensity) {
+          result += char;
+          continue;
+        }
+
+        let newChar = char.toLowerCase();
+
+        const replacements = {
+          'а': 'а', 'е': 'е', 'о': 'о', 'с': 'с', 'р': 'р', 'к': 'к',
+          'x': 'х', 'y': 'у', 'p': 'р', 'c': 'с', 'o': 'о', 'a': 'а'
+        };
+
+        if (replacements[newChar]) newChar = replacements[newChar];
+
+        if (currentMode === 'tiktok' || currentMode === 'max') {
+          if (Math.random() > 0.5) newChar = addDiacritic(newChar);
+          if (Math.random() > 0.65) newChar += zwsp;
+        }
+        if (currentMode === 'max') {
+          if (Math.random() > 0.75) newChar = addDiacritic(newChar);
+        }
+
+        result += (char === char.toUpperCase() && newChar.length === 1 ? newChar.toUpperCase() : newChar);
+      }
+
+      if (currentMode !== 'natural') {
+        result = result.replace(/\s+/g, ' ' + zwsp);
+      }
+
+      document.getElementById('result').textContent = result;
+      document.getElementById('status').innerHTML = '<span style="color:#00ff88;">✓ Готово для TikTok!</span>';
+    }
+
+    function copyResult() {
+      const text = document.getElementById('result').textContent;
+      if (text.length > 20) {
+        navigator.clipboard.writeText(text);
+        document.getElementById('status').innerHTML = '<span style="color:#00ff88;">✅ Скопировано!</span>';
+      }
+    }
+
+    function clearAll() {
+      document.getElementById('input').value = '';
+      document.getElementById('result').textContent = 'Здесь появится преобразованный текст...';
+      document.getElementById('status').textContent = '';
+    }
+
+    window.onload = () => {
+      document.getElementById('input').value = "Привет друзья! Сегодня я покажу очень крутой способ, который реально работает в 2026 году 🔥";
+    };
+  </script>
+</body>
+</html>

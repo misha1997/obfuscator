@@ -1,0 +1,20 @@
+# Виртуальное окружение
+venv/
+.venv/
+
+# Токены и секреты
+.env
+*.token
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Логи
+*.log
+
+# ОС
+.DS_Store
+Thumbs.db
