@@ -1,3 +1,7 @@
+"""
+Модуль обфускации текста для TikTok
+"""
+
 import random
 import re
 
@@ -6,7 +10,6 @@ ZWNJ = "\u200C"
 
 DIACRITICS = ["́", "̂", "̃", "̄", "̆", "̇", "̈"]
 
-# Базовые замены букв
 LETTER_REPLACEMENTS = {
     "а": ["а", "α", "a"], "е": ["е", "є", "ё", "e", "ε"],
     "о": ["о", "ο", "o", "օ"], "с": ["с", "ϲ", "c", "ꜱ"],
@@ -63,59 +66,43 @@ TRIGGER_ROOTS = [
 # Убираем дубли и сортируем для удобства
 TRIGGER_ROOTS = sorted(list(set(TRIGGER_ROOTS)))
 
+VALID_MODES = ("tiktok", "strange", "max")
+
+
 def generate_obfuscated_variants(word: str) -> list:
-    """Автоматически генерирует несколько вариантов обфускации слова"""
     variants = []
     lower = word.lower()
     
-    # Вариант 1: замена букв
-    variant1 = ""
-    for char in lower:
-        if char in LETTER_REPLACEMENTS:
-            variant1 += random.choice(LETTER_REPLACEMENTS[char])
-        else:
-            variant1 += char
-    variants.append(variant1)
+    v1 = "".join(random.choice(LETTER_REPLACEMENTS.get(c, [c])) for c in lower)
+    variants.append(v1)
     
-    # Вариант 2: латиница + цифры
-    variant2 = lower.replace("е", "e").replace("а", "a").replace("о", "o")
-    variant2 = variant2.replace("б", "6").replace("и", "i")
-    variants.append(variant2)
+    v2 = lower.replace("е", "e").replace("а", "a").replace("о", "o") \
+             .replace("б", "6").replace("и", "i").replace("у", "y")
+    variants.append(v2)
     
-    # Вариант 3: смешанный
-    variant3 = ""
-    for char in lower:
-        if random.random() > 0.5 and char in LETTER_REPLACEMENTS:
-            variant3 += random.choice(LETTER_REPLACEMENTS[char])
-        else:
-            variant3 += char
-    variants.append(variant3)
+    v3 = "".join(random.choice(LETTER_REPLACEMENTS.get(c, [c])) if random.random() > 0.4 else c for c in lower)
+    variants.append(v3)
     
-    return list(set(variants))  # убираем дубли
+    return list(set(variants))
 
 
-def obfuscate_universal(text: str, mode: str = "tiktok", intensity: float = 0.78) -> str:
-    """
-    Универсальная обфускация с автоматической обработкой чувствительных слов.
-    """
+def obfuscate(text: str, mode: str = "tiktok", intensity: int = 75) -> str:
+    """Основная функция обфускации"""
     if not text:
-        return text
+        return ""
 
+    if mode not in VALID_MODES:
+        mode = "tiktok"
+    
+    intensity = max(0, min(100, intensity)) / 100.0
     result = text
 
-    # === Этап 1: Обработка чувствительных корней ===
+    # Обработка триггерных корней
     for root in TRIGGER_ROOTS:
-        # Ищем корень (регистронезависимо)
         pattern = re.compile(re.escape(root), re.IGNORECASE)
-        
-        def replace_root(match):
-            original = match.group(0)
-            variants = generate_obfuscated_variants(original)
-            return random.choice(variants)
-        
-        result = pattern.sub(replace_root, result)
+        result = pattern.sub(lambda m: random.choice(generate_obfuscated_variants(m.group(0))), result)
 
-    # === Этап 2: Посимвольная обфускация ===
+    # Посимвольная обфускация
     chars = []
     for char in result:
         if random.random() > intensity:
@@ -125,25 +112,16 @@ def obfuscate_universal(text: str, mode: str = "tiktok", intensity: float = 0.78
         lower = char.lower()
         new_char = random.choice(LETTER_REPLACEMENTS.get(lower, [lower]))
 
-        # Режимы
         if mode == "tiktok":
-            if random.random() > 0.6: 
-                new_char = new_char + random.choice(DIACRITICS)
-            if random.random() > 0.75: 
-                new_char += ZWSP
-
+            if random.random() > 0.58: new_char += random.choice(DIACRITICS)
+            if random.random() > 0.72: new_char += ZWSP
         elif mode == "strange":
-            if random.random() > 0.4:
-                new_char = new_char + "".join(random.choices(DIACRITICS, k=random.randint(1,2)))
-            if random.random() > 0.55: 
-                new_char += ZWSP
-
+            if random.random() > 0.35: new_char += "".join(random.choices(DIACRITICS, k=random.randint(1, 2)))
+            if random.random() > 0.5: new_char += ZWSP
         elif mode == "max":
-            new_char = new_char + "".join(random.choices(DIACRITICS, k=random.randint(1,3)))
-            if random.random() > 0.4: 
-                new_char += ZWSP
-            if random.random() > 0.7: 
-                new_char += ZWNJ
+            new_char += "".join(random.choices(DIACRITICS, k=random.randint(1, 3)))
+            if random.random() > 0.4: new_char += ZWSP
+            if random.random() > 0.65: new_char += ZWNJ
 
         if char.isupper() and new_char:
             new_char = new_char[0].upper() + new_char[1:]
@@ -152,20 +130,7 @@ def obfuscate_universal(text: str, mode: str = "tiktok", intensity: float = 0.78
 
     final = "".join(chars)
 
-    # Разбиваем длинные слова
     if mode in ("strange", "max"):
-        final = re.sub(r'(\w{4,})', lambda m: m.group(1)[:2] + ZWSP + m.group(1)[2:], final)
+        final = re.sub(r'(\w{4,})', lambda m: m.group(1)[:3] + ZWSP + m.group(1)[3:], final)
 
     return final
-
-
-# ===================== ТЕСТ =====================
-if __name__ == "__main__":
-    test = "Завали ебало кацапня ебаная. Иди стой в очереди за бенз, сука!"
-    
-    print("TikTok Safe:")
-    print(obfuscate_universal(test, "tiktok", 0.78))
-    print("\nStrange:")
-    print(obfuscate_universal(test, "strange", 0.78))
-    print("\nMax:")
-    print(obfuscate_universal(test, "max", 0.85))
